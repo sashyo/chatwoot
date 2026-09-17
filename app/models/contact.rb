@@ -42,6 +42,11 @@
 # rubocop:enable Layout/LineLength
 
 class Contact < ApplicationRecord
+  include MinidauthSealable
+  # Seal a contact's name and phone with minidauth before they reach Postgres. Email and identifier
+  # stay clear: they are the lookup keys Chatwoot dedupes and routes contacts on.
+  minidauth_seals :name, :phone_number
+
   include Avatarable
   include AvailabilityStatusable
   include Labelable

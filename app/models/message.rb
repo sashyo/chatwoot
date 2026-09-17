@@ -41,6 +41,11 @@
 class Message < ApplicationRecord
   searchkick callbacks: false if ChatwootApp.advanced_search_allowed?
 
+  include MinidauthSealable
+  # Seal the message body with minidauth. `processed_message_content` is a derived plaintext copy, so
+  # blank it on write; the sealed `content` is the source of truth.
+  minidauth_seals :content, drop: :processed_message_content
+
   include MessageFilterHelpers
   include Liquidable
   NUMBER_OF_PERMITTED_ATTACHMENTS = 15
